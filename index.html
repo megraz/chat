@@ -11,6 +11,7 @@
         #chat {
             background-color: lightgray;
             height: 20em;
+            overflow: scroll
             /*20 lignes de txt*/
         }
     </style>
@@ -22,14 +23,31 @@
     <div class="row justify-content-md-center m-5">
         <div id="chat" class="row col-md-8">
         </div>
-        <form action="new-message.php" class="row col-md-8 m-3">
+        <form action="new-message.php" class="row col-md-8 m-3" method="POST">
             <label for="message">Message :</label>
-            <input type="text" class="form-control" id="message" placeholder="Say hi !">
+            <input type="text" class="form-control" name="message" id="message" placeholder="Say hi !">
             <input type="submit" id="submit-message" value="send" class="btn btn-primary">
         </form>
     </div>
     <script>
         "use strict";
+        //tp modele MVC 
+        let messages = ["Coucou!", "Sunshine!"]; // juste pr tester après c'est rempli avec un fichier
+
+        function display() {
+            let div = document.querySelector("#chat");
+            div.innerHTML = ""; //je supprime ce qu'il y a ds le tableau let messages = ["Coucou!", "Sunshine!"];  pr reconstruire
+            for (let m of messages) { //je veux ts les msg contenus ds la variable m
+                let p = document.createElement("p"); // on va creer un element le p est associé au parent
+                p.classList.add("col-md-12"); //pr rajouter une class à un element
+                p.textContent = m;
+                div.appendChild(p);
+                //div.textContent += m; //on affiche le tableau
+            }
+
+        }
+        display();
+
         let submitMessage = document.querySelector('#submit-message');
         submitMessage.addEventListener('click', function(e) {
             e.preventDefault();
@@ -42,6 +60,8 @@
                     console.log("test");
                     if (xhr.status === 200) {
                         console.log("success:" + xhr.responseText);
+                        messages.push(input.value); //pr maj l'affichge il faut mettre display après (modele mvc)
+                        display();
                     } else {
                         console.error("unexpected status:" + xhr.status);
                         console.error(xhr.response);

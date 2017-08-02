@@ -1,21 +1,24 @@
 <?php
+include_once 'Database.php';
+//creation d'une instance de Database
+$db = new Database;
+
 if (empty($_POST['message'])) {
     http_response_code(400);
     header('Content-Type: text/plain');
     echo 'expect a message parameter';
     exit(1);
 }
-echo $_POST['message'];
 
-/*
-<?php
-if (!empty($_POST['message'])) { //if (!empty($_POST['message'])) {
-echo $_POST ["message"];
-} else {
-    http_response_code(400); // indication pr les autres dev dc indiquer au cas où erreur 400 ...
-    header('Content-Type: text/plain'); //on change le msg du header on lui dit qu'on lui renvoie du txt
-    echo 'expect a message parameter';
-}
-*/
+//echo $_POST['message'];
+require_once("message.php");
+$msg = new Message($_POST['message']);
+
+//utiliser la fonction qui est ds la DB(qui crée les msg)
+$db->createMessage($msg);
+
+// DEBUG: remove when connected to DB.
+header('Content-Type: text/plain');
+echo $msg;
 
 ?>
