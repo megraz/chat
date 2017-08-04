@@ -26,6 +26,15 @@ class Database {
         $stmt->execute();
     }
     
-    
-
+    public function readMessage() { //
+        $stmt = $this->Database->query('SELECT * FROM message');//stmt= objet renvoyé par le PDO 
+        $messages = $stmt->fetchAll();//On récupére les données
+        $list = [];
+        foreach ($messages as $message) { // pr stocker les msg ds le tableau
+            $text = $message['text'];
+            $nvmsg = new Message($text);
+            $list[]= $nvmsg;
+        }
+        return $list;
+    }
 }

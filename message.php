@@ -1,5 +1,5 @@
 <?php
-class Message {
+class Message implements \JsonSerializable { //Spécifie les données qui doivent être linéarisées en JSON
     public $text;
     public $timestamp;
     
@@ -22,6 +22,11 @@ class Message {
 
     function setTimestamp($timestamp) {
         $this->timestamp = $timestamp;
+    }
+    
+    public function jsonSerialize() {
+        return get_object_vars($this);
+        
     }
 
 

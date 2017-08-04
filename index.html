@@ -1,77 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-    <title>Awsome Chat</title>
-    <style>
-        #chat {
-            background-color: lightgray;
-            height: 20em;
-            overflow: scroll
-            /*20 lignes de txt*/
-        }
-    </style>
-</head>
-
-<body class="container">
-
-    <h1 class="text-center">Awesome chat</h1>
-    <div class="row justify-content-md-center m-5">
-        <div id="chat" class="row col-md-8">
-        </div>
-        <form action="new-message.php" class="row col-md-8 m-3" method="POST">
-            <label for="message">Message :</label>
-            <input type="text" class="form-control" name="message" id="message" placeholder="Say hi !">
-            <input type="submit" id="submit-message" value="send" class="btn btn-primary">
-        </form>
-    </div>
-    <script>
-        "use strict";
-        //tp modele MVC 
-        let messages = ["Coucou!", "Sunshine!"]; // juste pr tester après c'est rempli avec un fichier
-
-        function display() {
-            let div = document.querySelector("#chat");
-            div.innerHTML = ""; //je supprime ce qu'il y a ds le tableau let messages = ["Coucou!", "Sunshine!"];  pr reconstruire
-            for (let m of messages) { //je veux ts les msg contenus ds la variable m
-                let p = document.createElement("p"); // on va creer un element le p est associé au parent
-                p.classList.add("col-md-12"); //pr rajouter une class à un element
-                p.textContent = m;
-                div.appendChild(p);
-                //div.textContent += m; //on affiche le tableau
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+        <title>Awsome Chat</title>
+        <style>
+            #chat {
+                background-color: lightgray;
+                height: 20em;
+                overflow: scroll
+                    /*20 lignes de txt*/
             }
+        </style>
+    </head>
 
-        }
-        display();
+    <body class="container">
 
-        let submitMessage = document.querySelector('#submit-message');
-        submitMessage.addEventListener('click', function(e) {
-            e.preventDefault();
-            let input = document.querySelector('#message');
-            console.log(input.value);
-            let xhr = new XMLHttpRequest(); //pour envoyer des donnees au serveur
-            xhr.open("POST", "new-message.php");
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    console.log("test");
-                    if (xhr.status === 200) {
-                        console.log("success:" + xhr.responseText);
-                        messages.push(input.value); //pr maj l'affichge il faut mettre display après (modele mvc)
-                        display();
-                    } else {
-                        console.error("unexpected status:" + xhr.status);
-                        console.error(xhr.response);
-                    }
+        <h1 class="text-center">Awesome chat</h1>
+        <div class="row justify-content-md-center m-5">
+            <div id="chat" class="row col-md-8">
+            </div>
+            <form action="new-message.php" class="row col-md-8 m-3" method="POST">
+                <label for="message">Message :</label>
+                <input type="text" class="form-control" name="message" id="message" placeholder="Say hi !">
+                <input type="submit" id="submit-message" value="send" class="btn btn-primary">
+            </form>
+        </div>
+        <script>
+            "use strict";
+            //tp modele MVC 
+            let messages = []; // juste pr tester après c'est rempli avec un fichier
+
+            function display() {
+                let div = document.querySelector("#chat");
+                div.innerHTML = ""; //je supprime ce qu'il y a ds le tableau let messages = ["Coucou!", "Sunshine!"];  pr reconstruire
+                for (let m of messages) { //je veux ts les msg contenus ds la variable m
+                    let p = document.createElement("p"); // on va creer un element le p est associé au parent
+                    p.classList.add("col-md-12"); //pr rajouter une class à un element
+                    p.textContent = m;
+                    div.appendChild(p);
+                    //div.textContent += m; //on affiche le tableau
                 }
-            };
-            xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded"); //pr indiquer au serveur les donnees, le contenu qu'on lui envoie
-            xhr.send("message=" + input.value);
-        });
-    </script>
-</body>
+
+            }
+            display();
+
+            let submitMessage = document.querySelector('#submit-message');
+            submitMessage.addEventListener('click', function (e) {
+                e.preventDefault();
+                let input = document.querySelector('#message');
+                console.log(input.value);
+                let xhr = new XMLHttpRequest(); //pour envoyer des donnees au serveur
+                xhr.open("POST", "new-message.php");
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        console.log("test");
+                        if (xhr.status === 200) {
+                            console.log("success:" + xhr.responseText);
+                            messages.push(input.value); //pr maj l'affichge il faut mettre display après (modele mvc)
+                            display();
+                        } else {
+                            console.error("unexpected status:" + xhr.status);
+                            console.error(xhr.response);
+                        }
+                    }
+                };
+                xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded"); //pr indiquer au serveur les donnees, le contenu qu'on lui envoie
+                xhr.send("message=" + input.value);
+            });
+
+            setInterval(function () { //pr maj read-messages ac xhr
+                let xhr = new XMLHttpRequest();
+                xhr.open('GET', 'read-messages.php', true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            let tab = JSON.parse(xhr.response);
+                            messages = [];
+
+                            //console.log(messages);
+                            for (let message of tab) {
+                                
+                                console.log(message.text);
+                                messages.push(message.text);
+                                display();
+                            }
+                            //display();
+                        } else {
+                            console.error('unexpected status code:', this.status);
+                        }
+                    }
+                };
+
+                xhr.send(null);
+            }, 500);
+        </script>
+    </body>
 
 </html>
